@@ -6,6 +6,7 @@
   min-height: 100vh;
   min-height: 100dvh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
@@ -158,7 +159,7 @@
   width: 100%;
   aspect-ratio: 1;
   border-radius: 16px;
-  background-size: 250%;
+  background-size: 180%;
   background-repeat: no-repeat;
   margin-bottom: 16px;
   position: relative;
@@ -538,9 +539,12 @@
 
 /* ===== MOBILE ===== */
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
   .app {
     padding: 12px;
+    align-items: flex-start;
+    padding-top: env(safe-area-inset-top, 12px);
+    padding-bottom: env(safe-area-inset-bottom, 12px);
   }
 
   .start-title {
@@ -549,11 +553,56 @@
 
   .bird-crop {
     aspect-ratio: 4 / 3;
+    background-size: 160%;
+    margin-bottom: 10px;
+  }
+
+  .quiz-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .choices {
+    gap: 6px;
   }
 
   .choice-btn {
     padding: 12px 16px;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    min-height: 44px;
+  }
+
+  .timer-bar {
+    margin-bottom: 8px;
+  }
+
+  .reveal-card {
+    padding-top: 12px;
+  }
+
+  .reveal-badge {
+    margin-bottom: 12px;
+    font-size: 1rem;
+    padding: 6px 20px;
+  }
+
+  .reveal-image-container {
+    margin-bottom: 12px;
+  }
+
+  .reveal-name {
+    font-size: 1.3rem;
+    margin-bottom: 6px;
+  }
+
+  .reveal-attribution {
+    margin-bottom: 14px;
+  }
+
+  .next-button {
+    padding: 12px 32px;
+    font-size: 1rem;
+    min-height: 44px;
   }
 
   .sb-score-ring {
@@ -563,5 +612,42 @@
 
   .sb-score-number {
     font-size: 2.5rem;
+  }
+
+  .sb-message {
+    font-size: 1.6rem;
+  }
+
+  .play-again-button,
+  .home-button {
+    min-height: 44px;
+    padding: 12px 24px;
+  }
+
+  .start-button {
+    min-height: 44px;
+  }
+}
+
+@media (max-height: 700px) and (max-width: 600px) {
+  .bird-crop {
+    aspect-ratio: 3 / 2;
+  }
+
+  .choice-btn {
+    padding: 10px 14px;
+    font-size: 0.9rem;
+  }
+
+  .choices {
+    gap: 4px;
+  }
+
+  .quiz-header {
+    margin-bottom: 4px;
+  }
+
+  .timer-bar {
+    margin-bottom: 6px;
   }
 }
