@@ -158,7 +158,7 @@ export function LeafOverlay({ coverage, holeX, holeY, hole2X, hole2Y, hole2Seed,
 
     // --- Small "glimpse" holes scattered across the canopy ---
     // These give dappled light / peek-through gaps like a real canopy.
-    const glimpseCount = Math.round(60 + (1 - coverage) * 72); // 60-96 glimpses
+    const glimpseCount = Math.round(120 + (1 - coverage) * 144); // 120-192 glimpses
     let glimpsePaths = '';
     for (let attempt = 0, placed = 0; attempt < glimpseCount * 4 && placed < glimpseCount; attempt++) {
       const gx = 5 + rng() * 90;
