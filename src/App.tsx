@@ -85,7 +85,6 @@ function App() {
           bird={game.currentBird}
           choices={game.choices}
           timeRemaining={game.timeRemaining}
-          timeLimit={game.timeLimit}
           selectedAnswer={game.selectedAnswer}
           cropPosition={game.cropPosition}
           currentIndex={game.currentIndex}
