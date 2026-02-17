@@ -1,10 +1,19 @@
 import type { HighScores } from '../hooks/useQuizGame';
+import { LeafOverlay } from './LeafOverlay';
 
 interface Props {
   highScores: HighScores;
   totalBirds: number;
   onStart: () => void;
 }
+
+// Fixed config so the start screen dove always looks the same
+const HERO_LEAF_CONFIG = {
+  coverage: 0.6,
+  holeX: 55,
+  holeY: 40,
+  seed: 42,
+};
 
 export function StartScreen({ highScores, totalBirds, onStart }: Props) {
   return (
@@ -14,12 +23,21 @@ export function StartScreen({ highScores, totalBirds, onStart }: Props) {
 
         <div className="hero-crop-container">
           <div className="hero-crop-frame">
-            <div
-              className="hero-crop-image"
-              style={{ backgroundImage: 'url(/images/mourdo.jpg)' }}
+            <img
+              src="/images/mourdo.jpg"
+              alt="Mourning Dove"
+              className="bird-crop-img"
+              draggable={false}
+            />
+            <LeafOverlay
+              coverage={HERO_LEAF_CONFIG.coverage}
+              holeX={HERO_LEAF_CONFIG.holeX}
+              holeY={HERO_LEAF_CONFIG.holeY}
+              seed={HERO_LEAF_CONFIG.seed}
+              blowAway={false}
             />
           </div>
-          <div className="hero-crop-label">close-up crop</div>
+          <div className="hero-crop-label">peep through the canopy</div>
         </div>
 
         <p className="start-subtitle">

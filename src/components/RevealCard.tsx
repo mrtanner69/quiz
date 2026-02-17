@@ -8,6 +8,7 @@ interface Props {
   currentIndex: number;
   roundSize: number;
   onNext: () => void;
+  onRestart: () => void;
 }
 
 export function RevealCard({
@@ -18,6 +19,7 @@ export function RevealCard({
   currentIndex,
   roundSize,
   onNext,
+  onRestart,
 }: Props) {
   const isLast = currentIndex + 1 >= roundSize;
 
@@ -47,9 +49,14 @@ export function RevealCard({
         Photo: {bird.imageAttribution}
       </p>
 
-      <button className="next-button" onClick={onNext}>
-        {isLast ? 'See Results' : 'Next Bird'}
-      </button>
+      <div className="reveal-actions">
+        <button className="next-button" onClick={onNext}>
+          {isLast ? 'See Results' : 'Next Bird'}
+        </button>
+        <button className="restart-button" onClick={onRestart}>
+          Restart
+        </button>
+      </div>
     </div>
   );
 }
