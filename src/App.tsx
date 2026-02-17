@@ -1,16 +1,32 @@
 import { useQuizGame } from './hooks/useQuizGame';
+import { useCountdownAudio } from './hooks/useCountdownAudio';
 import { StartScreen } from './components/StartScreen';
 import { QuizCard } from './components/QuizCard';
 import { RevealCard } from './components/RevealCard';
 import { ScoreBoard } from './components/ScoreBoard';
+import { ScoreBar } from './components/ScoreBar';
 import './App.css';
 
 function App() {
   const game = useQuizGame();
   const lastAnswer = game.answers[game.answers.length - 1] ?? null;
 
+  const isPlaying = game.phase === 'playing' && game.selectedAnswer === null && game.timeRemaining > 0;
+  useCountdownAudio(isPlaying, game.timeRemaining, game.timeLimit);
+
+  const showScoreBar = game.phase !== 'start';
+
   return (
     <div className="app">
+      {showScoreBar && (
+        <ScoreBar
+          score={game.score}
+          roundSize={game.roundSize}
+          streak={game.streak}
+          highScores={game.highScores}
+        />
+      )}
+
       {game.phase === 'start' && (
         <StartScreen
           highScores={game.highScores}
