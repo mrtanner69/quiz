@@ -4,7 +4,6 @@ interface Props {
   bird: BirdCard;
   choices: string[];
   timeRemaining: number;
-  timeLimit: number;
   selectedAnswer: string | null;
   cropPosition: { x: number; y: number };
   currentIndex: number;
@@ -17,7 +16,6 @@ export function QuizCard({
   bird,
   choices,
   timeRemaining,
-  timeLimit,
   selectedAnswer,
   cropPosition,
   currentIndex,
@@ -25,10 +23,13 @@ export function QuizCard({
   streak,
   onAnswer,
 }: Props) {
-  const timerPercent = (timeRemaining / timeLimit) * 100;
   const secondsLeft = Math.ceil(timeRemaining / 1000);
   const isTimedOut = timeRemaining <= 0 && selectedAnswer === null;
   const isAnswered = selectedAnswer !== null || isTimedOut;
+
+  const segmentColor =
+    secondsLeft <= 2 ? 'timer-segment-danger' :
+    secondsLeft <= 3 ? 'timer-segment-warning' : '';
 
   return (
     <div className="quiz-card">
@@ -43,10 +44,12 @@ export function QuizCard({
 
       <div className="timer-row">
         <div className="timer-bar">
-          <div
-            className={`timer-fill ${timerPercent < 30 ? 'timer-danger' : timerPercent < 60 ? 'timer-warning' : ''}`}
-            style={{ width: `${timerPercent}%` }}
-          />
+          {[1, 2, 3, 4, 5].map(i => (
+            <div
+              key={i}
+              className={`timer-segment ${secondsLeft >= i ? `timer-segment-active ${segmentColor}` : ''}`}
+            />
+          ))}
         </div>
         <span className={`timer-seconds ${secondsLeft <= 2 ? 'timer-seconds-danger' : ''}`}>
           {isAnswered ? '' : `${secondsLeft}s`}
