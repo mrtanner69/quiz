@@ -55,14 +55,20 @@ function generateChoices(bird: BirdCard, all: BirdCard[]): string[] {
   ]);
 }
 
-// Birds whose subject is near the top of the photo — use a lower y% to show them
-const TOP_CROP_BIRDS = new Set(['merlin']);
+export interface LeafConfig {
+  holeX: number;
+  holeY: number;
+  coverage: number;
+  seed: number;
+}
 
-function randomCrop(birdId?: string): { x: number; y: number } {
-  if (birdId && TOP_CROP_BIRDS.has(birdId)) {
-    return { x: 40 + Math.random() * 20, y: 10 + Math.random() * 15 };
-  }
-  return { x: 40 + Math.random() * 20, y: 35 + Math.random() * 20 };
+function randomLeafConfig(): LeafConfig {
+  return {
+    holeX: 25 + Math.random() * 50,      // 25-75%
+    holeY: 25 + Math.random() * 50,      // 25-75%
+    coverage: 0.4 + Math.random() * 0.3, // 40-70%
+    seed: (Math.random() * 100000) | 0,
+  };
 }
 
 function loadHighScores(): HighScores {
@@ -86,7 +92,7 @@ export function useQuizGame() {
   const [timeRemaining, setTimeRemaining] = useState(TIME_LIMIT);
   const [streak, setStreak] = useState(0);
   const [bestStreakThisRound, setBestStreakThisRound] = useState(0);
-  const [cropPosition, setCropPosition] = useState({ x: 50, y: 50 });
+  const [leafConfig, setLeafConfig] = useState<LeafConfig>({ holeX: 50, holeY: 50, coverage: 0.5, seed: 0 });
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [highScores, setHighScores] = useState<HighScores>(loadHighScores);
 
@@ -188,7 +194,7 @@ export function useQuizGame() {
     setBestStreakThisRound(0);
     bestStreakRoundRef.current = 0;
     setSelectedAnswer(null);
-    setCropPosition(randomCrop(selected[0].id));
+    setLeafConfig(randomLeafConfig());
     setChoices(generateChoices(selected[0], quizBirds));
     answeredRef.current = false;
     setPhase('playing');
@@ -231,7 +237,7 @@ export function useQuizGame() {
     }
     setCurrentIndex(next);
     setSelectedAnswer(null);
-    setCropPosition(randomCrop(roundBirds[next].id));
+    setLeafConfig(randomLeafConfig());
     setChoices(generateChoices(roundBirds[next], quizBirds));
     answeredRef.current = false;
     setPhase('playing');
@@ -271,7 +277,7 @@ export function useQuizGame() {
     score,
     streak,
     bestStreakThisRound,
-    cropPosition,
+    leafConfig,
     selectedAnswer,
     highScores,
     startGame,

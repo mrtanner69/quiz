@@ -1,11 +1,13 @@
 import type { BirdCard } from '../types/BirdCard';
+import type { LeafConfig } from '../hooks/useQuizGame';
+import { LeafOverlay } from './LeafOverlay';
 
 interface Props {
   bird: BirdCard;
   choices: string[];
   timeRemaining: number;
   selectedAnswer: string | null;
-  cropPosition: { x: number; y: number };
+  leafConfig: LeafConfig;
   currentIndex: number;
   roundSize: number;
   streak: number;
@@ -17,7 +19,7 @@ export function QuizCard({
   choices,
   timeRemaining,
   selectedAnswer,
-  cropPosition,
+  leafConfig,
   currentIndex,
   roundSize,
   streak,
@@ -56,13 +58,20 @@ export function QuizCard({
         </span>
       </div>
 
-      <div
-        className="bird-crop"
-        style={{
-          backgroundImage: `url(/images/${bird.id}.jpg)`,
-          backgroundPosition: `${cropPosition.x}% ${cropPosition.y}%`,
-        }}
-      >
+      <div className="bird-crop">
+        <img
+          src={`/images/${bird.id}.jpg`}
+          alt=""
+          className="bird-crop-img"
+          draggable={false}
+        />
+        <LeafOverlay
+          coverage={leafConfig.coverage}
+          holeX={leafConfig.holeX}
+          holeY={leafConfig.holeY}
+          seed={leafConfig.seed}
+          blowAway={isAnswered}
+        />
         {isTimedOut && (
           <div className="timeout-overlay">
             <span>Time's Up!</span>

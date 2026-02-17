@@ -300,13 +300,61 @@
   width: 100%;
   aspect-ratio: 1;
   border-radius: 16px;
-  background-size: 180%;
-  background-repeat: no-repeat;
   margin-bottom: 16px;
   position: relative;
   overflow: hidden;
   border: 2px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.bird-crop-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ===== LEAF OVERLAY ===== */
+
+.leaf-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.leaf {
+  position: absolute;
+  width: 54px;
+  height: 54px;
+  transform: translate(-50%, -50%) rotate(var(--lr)) scale(var(--ls));
+  filter: drop-shadow(1px 2px 3px rgba(0, 0, 0, 0.35));
+  will-change: transform, opacity;
+}
+
+.leaf-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.leaf-blow {
+  animation: leafBlowAway 850ms ease-in forwards;
+  animation-delay: var(--bd);
+}
+
+@keyframes leafBlowAway {
+  0% {
+    transform: translate(-50%, -50%) rotate(var(--lr)) scale(var(--ls));
+    opacity: 1;
+  }
+  100% {
+    transform: translate(
+      calc(-50% + var(--bx)),
+      calc(-50% + var(--by))
+    ) rotate(calc(var(--lr) + var(--bs))) scale(0);
+    opacity: 0;
+  }
 }
 
 .timeout-overlay {
@@ -867,7 +915,6 @@
     flex: 1;
     min-height: 0;
     aspect-ratio: auto;
-    background-size: 170%;
     margin-bottom: 8px;
     border-radius: 12px;
   }

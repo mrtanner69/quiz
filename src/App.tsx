@@ -89,7 +89,7 @@ function App() {
           choices={game.choices}
           timeRemaining={game.timeRemaining}
           selectedAnswer={game.selectedAnswer}
-          cropPosition={game.cropPosition}
+          leafConfig={game.leafConfig}
           currentIndex={game.currentIndex}
           roundSize={game.roundSize}
           streak={game.streak}
