@@ -26,6 +26,7 @@ export function QuizCard({
   onAnswer,
 }: Props) {
   const timerPercent = (timeRemaining / timeLimit) * 100;
+  const secondsLeft = Math.ceil(timeRemaining / 1000);
   const isTimedOut = timeRemaining <= 0 && selectedAnswer === null;
   const isAnswered = selectedAnswer !== null || isTimedOut;
 
@@ -40,11 +41,16 @@ export function QuizCard({
         )}
       </div>
 
-      <div className="timer-bar">
-        <div
-          className={`timer-fill ${timerPercent < 30 ? 'timer-danger' : timerPercent < 60 ? 'timer-warning' : ''}`}
-          style={{ width: `${timerPercent}%` }}
-        />
+      <div className="timer-row">
+        <div className="timer-bar">
+          <div
+            className={`timer-fill ${timerPercent < 30 ? 'timer-danger' : timerPercent < 60 ? 'timer-warning' : ''}`}
+            style={{ width: `${timerPercent}%` }}
+          />
+        </div>
+        <span className={`timer-seconds ${secondsLeft <= 2 ? 'timer-seconds-danger' : ''}`}>
+          {isAnswered ? '' : `${secondsLeft}s`}
+        </span>
       </div>
 
       <div
