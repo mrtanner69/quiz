@@ -314,13 +314,31 @@
   display: block;
 }
 
-/* ===== LEAF OVERLAY ===== */
+/* ===== LEAF / CANOPY OVERLAY ===== */
 
 .leaf-overlay {
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 1;
+}
+
+/* Solid SVG canopy that fills everything except the telescope hole */
+.canopy-solid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.canopy-blow {
+  animation: canopyFade 600ms ease-out forwards;
+}
+
+@keyframes canopyFade {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 .leaf {
