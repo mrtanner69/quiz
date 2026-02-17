@@ -71,6 +71,9 @@ export function QuizCard({
           coverage={leafConfig.coverage}
           holeX={leafConfig.holeX}
           holeY={leafConfig.holeY}
+          hole2X={leafConfig.hole2X}
+          hole2Y={leafConfig.hole2Y}
+          hole2Seed={leafConfig.hole2Seed}
           seed={leafConfig.seed}
           blowAway={isAnswered}
         />

@@ -58,16 +58,48 @@ function generateChoices(bird: BirdCard, all: BirdCard[]): string[] {
 export interface LeafConfig {
   holeX: number;
   holeY: number;
+  hole2X: number;
+  hole2Y: number;
+  hole2Seed: number;
   coverage: number;
   seed: number;
 }
 
 function randomLeafConfig(): LeafConfig {
+  const holeX = 25 + Math.random() * 50;       // 25-75%
+  const holeY = 25 + Math.random() * 50;       // 25-75%
+  const coverage = 0.50 + Math.random() * 0.35; // 50-85%
+  const seed = (Math.random() * 100000) | 0;
+
+  // Second hole must not overlap the first.
+  // holeRadius = 26 + (1 - coverage) * 20;  hole2Radius = holeRadius * 0.6
+  // Minimum centre-to-centre distance = holeRadius * 1.6  (sum of radii)
+  // We add a small margin (* 1.75) so they don't look glued together.
+  const holeRadius = 26 + (1 - coverage) * 20;
+  const minDist = holeRadius * 1.75;
+
+  let hole2X: number, hole2Y: number;
+  for (let i = 0; ; i++) {
+    hole2X = 20 + Math.random() * 60;   // 20-80%
+    hole2Y = 20 + Math.random() * 60;
+    const dx = hole2X - holeX;
+    const dy = hole2Y - holeY;
+    if (Math.sqrt(dx * dx + dy * dy) >= minDist) break;
+    // Safety valve – after many attempts just place it far from centre
+    if (i > 80) {
+      const angle = Math.random() * Math.PI * 2;
+      hole2X = 50 + Math.cos(angle) * 30;
+      hole2Y = 50 + Math.sin(angle) * 30;
+      break;
+    }
+  }
+
   return {
-    holeX: 25 + Math.random() * 50,       // 25-75%
-    holeY: 25 + Math.random() * 50,       // 25-75%
-    coverage: 0.50 + Math.random() * 0.35, // 50-85%  (dense canopy, small hole)
-    seed: (Math.random() * 100000) | 0,
+    holeX, holeY,
+    hole2X, hole2Y,
+    hole2Seed: (Math.random() * 100000) | 0,
+    coverage,
+    seed,
   };
 }
 
@@ -92,7 +124,7 @@ export function useQuizGame() {
   const [timeRemaining, setTimeRemaining] = useState(TIME_LIMIT);
   const [streak, setStreak] = useState(0);
   const [bestStreakThisRound, setBestStreakThisRound] = useState(0);
-  const [leafConfig, setLeafConfig] = useState<LeafConfig>({ holeX: 50, holeY: 50, coverage: 0.5, seed: 0 });
+  const [leafConfig, setLeafConfig] = useState<LeafConfig>({ holeX: 50, holeY: 50, hole2X: 30, hole2Y: 30, hole2Seed: 1, coverage: 0.5, seed: 0 });
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [highScores, setHighScores] = useState<HighScores>(loadHighScores);
 

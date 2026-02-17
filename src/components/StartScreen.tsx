@@ -12,6 +12,9 @@ const HERO_LEAF_CONFIG = {
   coverage: 0.6,
   holeX: 55,
   holeY: 40,
+  hole2X: 28,
+  hole2Y: 68,
+  hole2Seed: 99,
   seed: 42,
 };
 
@@ -33,6 +36,9 @@ export function StartScreen({ highScores, totalBirds, onStart }: Props) {
               coverage={HERO_LEAF_CONFIG.coverage}
               holeX={HERO_LEAF_CONFIG.holeX}
               holeY={HERO_LEAF_CONFIG.holeY}
+              hole2X={HERO_LEAF_CONFIG.hole2X}
+              hole2Y={HERO_LEAF_CONFIG.hole2Y}
+              hole2Seed={HERO_LEAF_CONFIG.hole2Seed}
               seed={HERO_LEAF_CONFIG.seed}
               blowAway={false}
             />
