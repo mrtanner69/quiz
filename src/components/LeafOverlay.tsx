@@ -142,8 +142,9 @@ export function LeafOverlay({ coverage, holeX, holeY, blowAway, seed }: Props) {
     const rng = mulberry32(seed);
 
     // Hole radius (% of image).  Smaller hole = harder.
-    // coverage 0.50 → radius ≈ 21    coverage 0.85 → radius ≈ 10
-    const holeRadius = 8 + (1 - coverage) * 26;
+    // coverage 0.50 → radius ≈ 36    coverage 0.85 → radius ≈ 29
+    // Gives roughly 40-50% of the image visible through the hole.
+    const holeRadius = 26 + (1 - coverage) * 20;
 
     const holePath = generateHolePath(holeX, holeY, holeRadius, seed);
     const canopyColor = CANOPY_COLORS[Math.floor(rng() * CANOPY_COLORS.length)];
@@ -247,7 +248,7 @@ export function LeafOverlay({ coverage, holeX, holeY, blowAway, seed }: Props) {
         <circle
           cx={holeX}
           cy={holeY}
-          r={12 + (1 - coverage) * 28}
+          r={28 + (1 - coverage) * 22}
           fill="none"
           stroke="rgba(0,0,0,0.25)"
           strokeWidth="4"
