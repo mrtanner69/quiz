@@ -51,11 +51,14 @@ function App() {
       return;
     }
 
-    // Results screen
+    // Results screen (skip regular sound for perfect 20/20 — celebration handles it)
     if (prevPhase !== 'results' && game.phase === 'results') {
       const correct = game.answers.filter(a => a.correct).length;
-      const pct = game.answers.length > 0 ? Math.round((correct / game.answers.length) * 100) : 0;
-      sounds.playResults(pct);
+      const isPerfect = correct === game.answers.length && game.answers.length === 20;
+      if (!isPerfect) {
+        const pct = game.answers.length > 0 ? Math.round((correct / game.answers.length) * 100) : 0;
+        sounds.playResults(pct);
+      }
     }
   }, [game.phase, game.answers, sounds]);
 

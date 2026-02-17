@@ -23,7 +23,7 @@ export function StartScreen({ highScores, totalBirds, onStart }: Props) {
         </div>
 
         <p className="start-subtitle">
-          Can you identify the bird from a close-up crop?
+          Can you identify the bird from a random (and possibly unfair) close-up crop?
         </p>
 
         <div className="start-rules">

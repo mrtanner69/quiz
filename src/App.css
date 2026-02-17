@@ -56,8 +56,8 @@
 .hero-crop-image {
   width: 100%;
   height: 100%;
-  background-size: 280%;
-  background-position: 52% 18%;
+  background-size: 350%;
+  background-position: 70% 22%;
   background-repeat: no-repeat;
   transition: background-size 0.4s ease;
 }
@@ -638,6 +638,135 @@
 
 .home-button:hover {
   background: rgba(255, 255, 255, 0.18);
+}
+
+/* ===== PERFECT SCORE CELEBRATION ===== */
+
+.perfect-celebration {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.celebration-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.celebration-flash-overlay {
+  position: absolute;
+  inset: 0;
+  transition: background-color 0.08s ease;
+  pointer-events: none;
+}
+
+.celebration-text-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  animation: celebrationTextEntry 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 1001;
+  pointer-events: none;
+}
+
+.celebration-stars {
+  font-size: 2rem;
+  color: #ffd700;
+  letter-spacing: 12px;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.4);
+  animation: celebrationStarPulse 0.5s ease infinite alternate;
+  margin: 4px 0;
+}
+
+.celebration-title {
+  font-size: 4.5rem;
+  font-weight: 900;
+  letter-spacing: 8px;
+  background: linear-gradient(135deg, #ffd700, #ff6b35, #ff1744, #d500f9, #00b0ff, #ffd700);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: celebrationRainbow 1s ease infinite;
+  text-shadow: none;
+  filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.6));
+  line-height: 1.1;
+}
+
+.celebration-score {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #ffffff;
+  text-shadow:
+    0 0 10px rgba(255, 255, 255, 0.8),
+    0 0 30px rgba(255, 215, 0, 0.6),
+    0 0 60px rgba(255, 107, 53, 0.4);
+  letter-spacing: 4px;
+  margin: 8px 0;
+}
+
+.celebration-subtitle {
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: 6px;
+  color: #00e676;
+  text-shadow: 0 0 15px rgba(0, 230, 118, 0.7);
+  text-transform: uppercase;
+  animation: celebrationBlink 0.3s step-end infinite alternate;
+}
+
+@keyframes celebrationTextEntry {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  60% {
+    transform: translate(-50%, -50%) scale(1.15);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes celebrationRainbow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes celebrationStarPulse {
+  from { transform: scale(1); opacity: 0.8; }
+  to { transform: scale(1.2); opacity: 1; }
+}
+
+@keyframes celebrationBlink {
+  0% { opacity: 1; }
+  50% { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+
+@media (max-width: 600px) {
+  .celebration-title {
+    font-size: 3rem;
+    letter-spacing: 4px;
+  }
+  .celebration-score {
+    font-size: 2.2rem;
+  }
+  .celebration-subtitle {
+    font-size: 1rem;
+    letter-spacing: 3px;
+  }
+  .celebration-stars {
+    font-size: 1.5rem;
+    letter-spacing: 8px;
+  }
 }
 
 /* ===== ANIMATIONS ===== */
