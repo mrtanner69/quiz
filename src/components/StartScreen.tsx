@@ -10,7 +10,18 @@ export function StartScreen({ highScores, totalBirds, onStart }: Props) {
   return (
     <div className="start-screen">
       <div className="start-content">
-        <h1 className="start-title">Bird Quiz</h1>
+        <h1 className="start-title">Unfair Frustrating Bird Quiz</h1>
+
+        <div className="hero-crop-container">
+          <div className="hero-crop-frame">
+            <div
+              className="hero-crop-image"
+              style={{ backgroundImage: 'url(/images/mourdo.jpg)' }}
+            />
+          </div>
+          <div className="hero-crop-label">close-up crop</div>
+        </div>
+
         <p className="start-subtitle">
           Can you identify the bird from a close-up crop?
         </p>

@@ -1,7 +1,7 @@
 {
-  "name": "Bird Quiz",
-  "short_name": "Bird Quiz",
-  "description": "Identify birds from close-up photo crops",
+  "name": "Unfair Frustrating Bird Quiz",
+  "short_name": "Unfair Bird Quiz",
+  "description": "Can you identify the bird from an unfair close-up crop?",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f5f6fa",
