@@ -16,6 +16,7 @@
 .start-screen {
   text-align: center;
   animation: fadeIn 0.5s ease;
+  width: 100%;
 }
 
 .start-title {
@@ -820,6 +821,14 @@
     height: 100dvh;
     min-height: 0;
     overflow: hidden;
+  }
+
+  .start-screen {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: env(safe-area-inset-bottom, 16px);
   }
 
   .start-title {
