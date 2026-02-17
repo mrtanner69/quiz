@@ -12,6 +12,7 @@ interface Props {
   roundSize: number;
   streak: number;
   onAnswer: (name: string) => void;
+  onRestart: () => void;
 }
 
 export function QuizCard({
@@ -24,6 +25,7 @@ export function QuizCard({
   roundSize,
   streak,
   onAnswer,
+  onRestart,
 }: Props) {
   const secondsLeft = Math.ceil(timeRemaining / 1000);
   const isTimedOut = timeRemaining <= 0 && selectedAnswer === null;
@@ -78,6 +80,10 @@ export function QuizCard({
           </div>
         )}
       </div>
+
+      <button className="restart-button" onClick={onRestart}>
+        Restart
+      </button>
 
       <div className="choices">
         {choices.map((name) => {

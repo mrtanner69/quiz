@@ -97,6 +97,7 @@ function App() {
             sounds.playClick();
             game.selectAnswer(name);
           }}
+          onRestart={game.startGame}
         />
       )}
 
@@ -109,6 +110,7 @@ function App() {
           currentIndex={game.currentIndex}
           roundSize={game.roundSize}
           onNext={game.nextBird}
+          onRestart={game.startGame}
         />
       )}
 
