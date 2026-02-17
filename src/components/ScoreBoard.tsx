@@ -1,5 +1,6 @@
 import type { QuizAnswer, HighScores } from '../hooks/useQuizGame';
 import { quizBirds } from '../hooks/useQuizGame';
+import { PerfectScoreCelebration } from './PerfectScoreCelebration';
 
 interface Props {
   answers: QuizAnswer[];
@@ -28,8 +29,11 @@ export function ScoreBoard({
   else if (percent >= 40) message = 'Keep Practicing!';
   else message = 'Better Luck Next Time!';
 
+  const isPerfect = correct === total && total === 20;
+
   return (
     <div className="scoreboard">
+      {isPerfect && <PerfectScoreCelebration />}
       <h1 className="sb-message">{message}</h1>
 
       <div className="sb-score-ring">
