@@ -28,6 +28,69 @@
   margin-bottom: 8px;
 }
 
+/* Hero crop image – stylized cut-out on start screen */
+
+.hero-crop-container {
+  position: relative;
+  margin: 0 auto 20px;
+  width: 200px;
+}
+
+.hero-crop-frame {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  border: 3px solid rgba(255, 215, 0, 0.4);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    inset 0 0 40px rgba(0, 0, 0, 0.3);
+  /* Angled crop cut-out shape */
+  clip-path: polygon(
+    8% 0%, 100% 0%, 100% 92%, 92% 100%, 0% 100%, 0% 8%
+  );
+}
+
+.hero-crop-image {
+  width: 100%;
+  height: 100%;
+  background-size: 280%;
+  background-position: 52% 18%;
+  background-repeat: no-repeat;
+  transition: background-size 0.4s ease;
+}
+
+.hero-crop-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 215, 0, 0.15) 0%,
+    transparent 40%,
+    transparent 60%,
+    rgba(255, 107, 53, 0.1) 100%
+  );
+  pointer-events: none;
+}
+
+.hero-crop-label {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 3px 12px;
+  background: rgba(255, 215, 0, 0.15);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 10px;
+  font-size: 0.7rem;
+  color: rgba(255, 215, 0, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+}
+
 .start-subtitle {
   color: rgba(255, 255, 255, 0.7);
   font-size: 1.1rem;
@@ -632,6 +695,17 @@
 
   .start-title {
     font-size: 2.2rem;
+  }
+
+  .hero-crop-container {
+    width: 150px;
+    margin-bottom: 14px;
+  }
+
+  .hero-crop-frame {
+    width: 150px;
+    height: 150px;
+    border-radius: 18px;
   }
 
   /* --- Quiz card: flex layout fills viewport --- */
