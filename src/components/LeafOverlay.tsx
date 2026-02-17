@@ -67,6 +67,9 @@ const LEAF_COLORS = [
   '#28400e',
 ];
 
+// Base canopy fill colours (darker greens)
+const CANOPY_COLORS = ['#1e3a0e', '#243f12', '#1a3510', '#203d14'];
+
 interface LeafData {
   id: number;
   x: number;
@@ -90,57 +93,99 @@ interface Props {
   seed: number;
 }
 
+/**
+ * Compute the wobbly radius at a given angle.
+ * Shared between the SVG cutout and the edge-leaf placement so they match.
+ */
+function wobbleRadius(angle: number, baseRadius: number, seed: number): number {
+  const w =
+    1.0 +
+    0.14 * Math.sin(angle * 3.7 + seed * 0.13) +
+    0.09 * Math.cos(angle * 5.3 + seed * 0.07) +
+    0.06 * Math.sin(angle * 7.1 + seed * 0.19) +
+    0.04 * Math.cos(angle * 11.3 + seed * 0.31);
+  return baseRadius * w;
+}
+
+/**
+ * Generate a smooth, wobbly closed SVG path for the canopy hole.
+ * Uses quadratic Bézier curves through midpoints of successive edge samples.
+ */
+function generateHolePath(
+  holeX: number,
+  holeY: number,
+  baseRadius: number,
+  seed: number,
+): string {
+  const N = 48;
+  const pts: [number, number][] = [];
+
+  for (let i = 0; i < N; i++) {
+    const angle = (i / N) * Math.PI * 2;
+    const r = wobbleRadius(angle, baseRadius, seed);
+    pts.push([holeX + r * Math.cos(angle), holeY + r * Math.sin(angle)]);
+  }
+
+  // Smooth closed curve via midpoints
+  const mid = (a: number, b: number) => (a + b) / 2;
+  let d = `M ${mid(pts[N - 1][0], pts[0][0])} ${mid(pts[N - 1][1], pts[0][1])}`;
+  for (let i = 0; i < N; i++) {
+    const next = pts[(i + 1) % N];
+    d += ` Q ${pts[i][0]} ${pts[i][1]} ${mid(pts[i][0], next[0])} ${mid(pts[i][1], next[1])}`;
+  }
+  d += ' Z';
+  return d;
+}
+
 export function LeafOverlay({ coverage, holeX, holeY, blowAway, seed }: Props) {
-  const leaves = useMemo(() => {
+  const { holePath, canopyColor, leaves } = useMemo(() => {
     const rng = mulberry32(seed);
-    const result: LeafData[] = [];
 
-    // Hole radius scales inversely with coverage
-    // coverage 0.4 → radius ~32%   coverage 0.7 → radius ~20%
-    const holeRadius = 16 + (1 - coverage) * 52;
+    // Hole radius (% of image).  Smaller hole = harder.
+    // coverage 0.50 → radius ≈ 36    coverage 0.85 → radius ≈ 29
+    // Gives roughly 40-50% of the image visible through the hole.
+    const holeRadius = 26 + (1 - coverage) * 20;
 
-    // Number of leaves scales with coverage
-    const target = Math.round(40 + coverage * 55);
+    const mainHolePath = generateHolePath(holeX, holeY, holeRadius, seed);
+    const canopyColor = CANOPY_COLORS[Math.floor(rng() * CANOPY_COLORS.length)];
 
-    let id = 0;
-    // Over-generate candidates, then keep the ones outside the hole
-    for (let attempt = 0; attempt < target * 4 && result.length < target; attempt++) {
-      // Extend range so leaves poke in from outside the frame
-      const x = -12 + rng() * 124;
-      const y = -12 + rng() * 124;
-
-      const dx = x - holeX;
-      const dy = y - holeY;
+    // --- Small "glimpse" holes scattered across the canopy ---
+    // These give dappled light / peek-through gaps like a real canopy.
+    const glimpseCount = Math.round(30 + (1 - coverage) * 36); // 30-48 glimpses
+    let glimpsePaths = '';
+    for (let attempt = 0, placed = 0; attempt < glimpseCount * 4 && placed < glimpseCount; attempt++) {
+      const gx = 5 + rng() * 90;
+      const gy = 5 + rng() * 90;
+      // Must be outside the main hole (with margin) and inside the image
+      const dx = gx - holeX;
+      const dy = gy - holeY;
       const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < holeRadius * 1.4) continue;
+      // Small wobbly radius (2–5% of image)
+      const gr = 2 + rng() * 3;
+      glimpsePaths += ' ' + generateHolePath(gx, gy, gr, seed + placed * 777);
+      placed++;
+    }
 
-      // Wobbly / organic hole edge
-      const angle = Math.atan2(dy, dx);
-      const wobble =
-        0.85 +
-        0.25 * Math.sin(angle * 3.7 + seed * 0.13) +
-        0.1 * Math.cos(angle * 5.3 + seed * 0.07);
-      const effectiveRadius = holeRadius * wobble;
+    const holePath = mainHolePath + glimpsePaths;
 
-      if (dist < effectiveRadius) continue;
+    const leaves: LeafData[] = [];
+    let id = 0;
 
-      // Leaves near the hole edge are smaller
-      const edgeFactor = Math.max(0, 1 - (dist - effectiveRadius) / 22);
-      const baseScale = 0.7 + rng() * 1.0;
-      const scale = baseScale * (1 - edgeFactor * 0.45);
-
-      const rotation = rng() * 360;
+    // Helper to push a leaf with blow-away data
+    function pushLeaf(
+      x: number,
+      y: number,
+      rotation: number,
+      scale: number,
+      zIdx: number,
+    ) {
       const shapeIdx = Math.floor(rng() * LEAF_SHAPES.length);
       const colorIdx = Math.floor(rng() * LEAF_COLORS.length);
-
-      // Blow-away direction: mostly upward + random spread
       const blowAngle = -Math.PI / 2 + (rng() - 0.5) * Math.PI * 0.9;
       const blowDist = 120 + rng() * 220;
-      const blowX = Math.cos(blowAngle) * blowDist;
-      const blowY = Math.sin(blowAngle) * blowDist;
-      const blowSpin = (rng() - 0.5) * 720;
-      const blowDelay = rng() * 350;
 
-      result.push({
+      leaves.push({
         id: id++,
         x,
         y,
@@ -148,19 +193,89 @@ export function LeafOverlay({ coverage, holeX, holeY, blowAway, seed }: Props) {
         scale,
         shapeIdx,
         colorIdx,
-        zIndex: Math.floor(rng() * 10),
-        blowX,
-        blowY,
-        blowSpin,
-        blowDelay,
+        zIndex: zIdx,
+        blowX: Math.cos(blowAngle) * blowDist,
+        blowY: Math.sin(blowAngle) * blowDist,
+        blowSpin: (rng() - 0.5) * 720,
+        blowDelay: rng() * 350,
       });
     }
 
-    return result;
+    // --- 1. Edge leaves: ring around the hole for organic framing ---
+    // Two rings – inner ring overlaps into the hole slightly, outer ring
+    // sits just outside to break up the straight SVG cutout edge.
+    const ringCount = Math.round(22 + coverage * 14); // 22-34 per ring
+
+    for (let ring = 0; ring < 2; ring++) {
+      const count = ring === 0 ? ringCount : Math.round(ringCount * 0.7);
+      for (let i = 0; i < count; i++) {
+        const baseAngle = (i / count) * Math.PI * 2;
+        const angle = baseAngle + (rng() - 0.5) * ((Math.PI * 2) / count) * 0.6;
+        const edgeR = wobbleRadius(angle, holeRadius, seed);
+
+        // Inner ring: overlaps inward; outer ring: sits outside
+        const offset =
+          ring === 0
+            ? edgeR * (0.88 + rng() * 0.25) // straddles edge inward
+            : edgeR * (1.05 + rng() * 0.35); // just outside edge
+
+        const x = holeX + offset * Math.cos(angle);
+        const y = holeY + offset * Math.sin(angle);
+        // Point leaves roughly inward (toward hole centre)
+        const rot = (angle * 180) / Math.PI + 90 + (rng() - 0.5) * 70;
+        const scale = ring === 0 ? 0.55 + rng() * 0.7 : 0.7 + rng() * 0.9;
+
+        pushLeaf(x, y, rot, scale, 2 + ring);
+      }
+    }
+
+    // --- 2. Surface texture leaves on the canopy body ---
+    // These sit on top of the solid canopy and give it a layered, leafy look.
+    const surfaceCount = Math.round(18 + coverage * 14);
+    for (let attempt = 0, placed = 0; attempt < surfaceCount * 3 && placed < surfaceCount; attempt++) {
+      const x = -8 + rng() * 116;
+      const y = -8 + rng() * 116;
+      const dx = x - holeX;
+      const dy = y - holeY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      // Keep well away from the hole so they don't look random
+      if (dist < holeRadius * 1.5) continue;
+
+      const rot = rng() * 360;
+      const scale = 0.7 + rng() * 1.1;
+      pushLeaf(x, y, rot, scale, 4 + Math.floor(rng() * 3));
+      placed++;
+    }
+
+    return { holePath, canopyColor, leaves };
   }, [coverage, holeX, holeY, seed]);
 
   return (
     <div className="leaf-overlay" aria-hidden>
+      {/* Solid canopy with a wobbly hole punched out (telescope view) */}
+      <svg
+        className={`canopy-solid${blowAway ? ' canopy-blow' : ''}`}
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+      >
+        {/* Outer rect + inner hole, fill-rule evenodd = punched-out hole */}
+        <path
+          d={`M-2 -2 H102 V102 H-2 Z ${holePath}`}
+          fillRule="evenodd"
+          fill={canopyColor}
+        />
+        {/* Subtle darker vignette at hole edge for depth */}
+        <circle
+          cx={holeX}
+          cy={holeY}
+          r={28 + (1 - coverage) * 22}
+          fill="none"
+          stroke="rgba(0,0,0,0.25)"
+          strokeWidth="4"
+        />
+      </svg>
+
+      {/* Decorative leaves: framing the hole + surface texture */}
       {leaves.map((leaf) => {
         const shape = LEAF_SHAPES[leaf.shapeIdx];
         const color = LEAF_COLORS[leaf.colorIdx];

@@ -64,9 +64,9 @@ export interface LeafConfig {
 
 function randomLeafConfig(): LeafConfig {
   return {
-    holeX: 25 + Math.random() * 50,      // 25-75%
-    holeY: 25 + Math.random() * 50,      // 25-75%
-    coverage: 0.4 + Math.random() * 0.3, // 40-70%
+    holeX: 25 + Math.random() * 50,       // 25-75%
+    holeY: 25 + Math.random() * 50,       // 25-75%
+    coverage: 0.50 + Math.random() * 0.35, // 50-85%  (dense canopy, small hole)
     seed: (Math.random() * 100000) | 0,
   };
 }
