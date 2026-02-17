@@ -56,7 +56,7 @@ function generateChoices(bird: BirdCard, all: BirdCard[]): string[] {
 }
 
 function randomCrop(): { x: number; y: number } {
-  return { x: 30 + Math.random() * 40, y: 25 + Math.random() * 40 };
+  return { x: 40 + Math.random() * 20, y: 35 + Math.random() * 20 };
 }
 
 function loadHighScores(): HighScores {
