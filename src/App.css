@@ -113,6 +113,7 @@
   padding: 8px 16px;
   margin-bottom: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
 }
 
 .score-bar-item {
@@ -160,6 +161,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
+  flex-shrink: 0;
 }
 
 .quiz-progress {
@@ -178,28 +180,53 @@
   animation: streakPop 0.3s ease;
 }
 
-.timer-bar {
-  height: 6px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
+/* Timer row: bar + seconds label */
+.timer-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-bottom: 12px;
+  flex-shrink: 0;
+}
+
+.timer-bar {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
   overflow: hidden;
 }
 
 .timer-fill {
   height: 100%;
-  background: #00e676;
-  border-radius: 3px;
+  background: linear-gradient(90deg, #00e676, #69f0ae);
+  border-radius: 4px;
   transition: width 0.05s linear;
+  box-shadow: 0 0 6px rgba(0, 230, 118, 0.4);
 }
 
 .timer-fill.timer-warning {
-  background: #ffab00;
+  background: linear-gradient(90deg, #ff9100, #ffab00);
+  box-shadow: 0 0 6px rgba(255, 171, 0, 0.4);
 }
 
 .timer-fill.timer-danger {
-  background: #ff1744;
+  background: linear-gradient(90deg, #ff1744, #ff5252);
+  box-shadow: 0 0 8px rgba(255, 23, 68, 0.5);
   animation: timerPulse 0.5s ease infinite;
+}
+
+.timer-seconds {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
+  min-width: 24px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.timer-seconds-danger {
+  color: #ff1744;
 }
 
 .bird-crop {
@@ -236,6 +263,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  flex-shrink: 0;
 }
 
 .choice-btn {
@@ -584,100 +612,122 @@
   100% { transform: scale(1); }
 }
 
-/* ===== MOBILE ===== */
+/* ===== MOBILE — fill viewport, no scrolling ===== */
 
 @media (max-width: 600px) {
   .app {
-    padding: 12px;
+    padding: 8px 10px;
+    padding-top: env(safe-area-inset-top, 8px);
+    padding-bottom: env(safe-area-inset-bottom, 8px);
     align-items: flex-start;
-    padding-top: env(safe-area-inset-top, 12px);
-    padding-bottom: env(safe-area-inset-bottom, 12px);
+    justify-content: flex-start;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
   }
 
   .start-title {
     font-size: 2.2rem;
   }
 
-  .bird-crop {
-    aspect-ratio: 4 / 3;
-    background-size: 160%;
-    margin-bottom: 10px;
-  }
+  /* --- Quiz card: flex layout fills viewport --- */
 
   .quiz-card {
     display: flex;
     flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .quiz-header {
+    margin-bottom: 4px;
+  }
+
+  .timer-row {
+    margin-bottom: 6px;
+  }
+
+  .bird-crop {
+    flex: 1;
+    min-height: 0;
+    aspect-ratio: auto;
+    background-size: 170%;
+    margin-bottom: 8px;
+    border-radius: 12px;
   }
 
   .choices {
-    gap: 6px;
+    gap: 5px;
   }
 
   .choice-btn {
-    padding: 12px 16px;
-    font-size: 0.95rem;
-    min-height: 44px;
+    padding: 11px 14px;
+    font-size: 0.93rem;
+    min-height: 42px;
+    border-radius: 10px;
   }
 
-  .timer-bar {
-    margin-bottom: 8px;
-  }
+  /* --- Reveal card: fit in viewport --- */
 
   .reveal-card {
-    padding-top: 12px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    padding-top: 0;
   }
 
   .reveal-badge {
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     font-size: 1rem;
-    padding: 6px 20px;
+    padding: 5px 18px;
+    flex-shrink: 0;
   }
 
   .reveal-image-container {
-    margin-bottom: 12px;
+    flex: 1;
+    min-height: 0;
+    margin-bottom: 8px;
+    border-radius: 12px;
+  }
+
+  .reveal-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .reveal-name {
     font-size: 1.3rem;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
+    flex-shrink: 0;
+  }
+
+  .reveal-you-said {
+    margin-bottom: 4px;
+    font-size: 0.85rem;
+    flex-shrink: 0;
   }
 
   .reveal-attribution {
-    margin-bottom: 14px;
+    margin-bottom: 8px;
+    font-size: 0.75rem;
+    flex-shrink: 0;
   }
 
   .next-button {
-    padding: 12px 32px;
+    padding: 11px 32px;
     font-size: 1rem;
     min-height: 44px;
+    flex-shrink: 0;
   }
 
-  .sb-score-ring {
-    width: 130px;
-    height: 130px;
-  }
-
-  .sb-score-number {
-    font-size: 2.5rem;
-  }
-
-  .sb-message {
-    font-size: 1.6rem;
-  }
-
-  .play-again-button,
-  .home-button {
-    min-height: 44px;
-    padding: 12px 24px;
-  }
-
-  .start-button {
-    min-height: 44px;
-  }
+  /* --- Score bar compact --- */
 
   .score-bar {
-    padding: 6px 12px;
-    margin-bottom: 8px;
+    padding: 5px 12px;
+    margin-bottom: 6px;
     border-radius: 10px;
   }
 
@@ -688,27 +738,106 @@
   .score-bar-label {
     font-size: 0.6rem;
   }
-}
 
-@media (max-height: 700px) and (max-width: 600px) {
-  .bird-crop {
-    aspect-ratio: 3 / 2;
+  /* --- Scoreboard --- */
+
+  .scoreboard {
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+    -webkit-overflow-scrolling: touch;
   }
 
+  .sb-score-ring {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 14px;
+  }
+
+  .sb-score-number {
+    font-size: 2.2rem;
+  }
+
+  .sb-message {
+    font-size: 1.5rem;
+    margin-bottom: 14px;
+  }
+
+  .sb-streak {
+    margin-bottom: 14px;
+  }
+
+  .sb-high-scores {
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+
+  .play-again-button,
+  .home-button {
+    min-height: 44px;
+    padding: 11px 22px;
+  }
+
+  .start-button {
+    min-height: 44px;
+  }
+
+  .sb-missed-grid {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 8px;
+  }
+
+  .sb-missed-bird span {
+    padding: 4px;
+    font-size: 0.7rem;
+  }
+}
+
+/* Extra-short phones (SE, older Androids) */
+@media (max-height: 700px) and (max-width: 600px) {
   .choice-btn {
-    padding: 10px 14px;
-    font-size: 0.9rem;
+    padding: 9px 12px;
+    font-size: 0.88rem;
+    min-height: 38px;
   }
 
   .choices {
-    gap: 4px;
+    gap: 3px;
   }
 
   .quiz-header {
+    margin-bottom: 2px;
+  }
+
+  .timer-row {
     margin-bottom: 4px;
   }
 
-  .timer-bar {
+  .bird-crop {
+    margin-bottom: 5px;
+  }
+
+  .score-bar {
+    padding: 4px 10px;
+    margin-bottom: 4px;
+  }
+
+  .reveal-badge {
+    padding: 4px 14px;
+    font-size: 0.9rem;
     margin-bottom: 6px;
+  }
+
+  .reveal-name {
+    font-size: 1.1rem;
+  }
+
+  .reveal-attribution {
+    margin-bottom: 6px;
+  }
+
+  .next-button {
+    padding: 10px 28px;
+    min-height: 40px;
   }
 }

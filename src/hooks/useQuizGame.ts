@@ -55,7 +55,13 @@ function generateChoices(bird: BirdCard, all: BirdCard[]): string[] {
   ]);
 }
 
-function randomCrop(): { x: number; y: number } {
+// Birds whose subject is near the top of the photo — use a lower y% to show them
+const TOP_CROP_BIRDS = new Set(['merlin']);
+
+function randomCrop(birdId?: string): { x: number; y: number } {
+  if (birdId && TOP_CROP_BIRDS.has(birdId)) {
+    return { x: 40 + Math.random() * 20, y: 10 + Math.random() * 15 };
+  }
   return { x: 40 + Math.random() * 20, y: 35 + Math.random() * 20 };
 }
 
@@ -182,7 +188,7 @@ export function useQuizGame() {
     setBestStreakThisRound(0);
     bestStreakRoundRef.current = 0;
     setSelectedAnswer(null);
-    setCropPosition(randomCrop());
+    setCropPosition(randomCrop(selected[0].id));
     setChoices(generateChoices(selected[0], quizBirds));
     answeredRef.current = false;
     setPhase('playing');
@@ -225,7 +231,7 @@ export function useQuizGame() {
     }
     setCurrentIndex(next);
     setSelectedAnswer(null);
-    setCropPosition(randomCrop());
+    setCropPosition(randomCrop(roundBirds[next].id));
     setChoices(generateChoices(roundBirds[next], quizBirds));
     answeredRef.current = false;
     setPhase('playing');
