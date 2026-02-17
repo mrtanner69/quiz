@@ -1,7 +1,7 @@
 {
-  "name": "Prescott Preserve Bird Flashcards",
-  "short_name": "Bird Flashcards",
-  "description": "Learn to identify birds by their songs and pictures",
+  "name": "Bird Quiz",
+  "short_name": "Bird Quiz",
+  "description": "Identify birds from close-up photo crops",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f5f6fa",
